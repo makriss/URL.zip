@@ -3,7 +3,7 @@ from django.db import models
 
 class UrlMapper(models.Model):
     hashcode = models.CharField(max_length=15, unique=True)
-    url = models.TextField(unique=True)
+    url = models.URLField(unique=True)
     clicks = models.IntegerField(default=0)
     url_shorten_count = models.IntegerField(default=1)
     creation_timestamp = models.DateTimeField(auto_now_add=True)

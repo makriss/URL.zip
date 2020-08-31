@@ -1,6 +1,34 @@
 import hashlib
+import re
 
-from zipper.constants import BASE62_DIGITS
+from django.core.exceptions import ValidationError
+from django.core.validators import URLValidator
+from django.forms import URLField
+from django.http import JsonResponse
+
+from zipper.constants import BASE62_DIGITS, URL_SYNTAX_REGEX, URL_PATH_REGEX
+
+# Creating custom error codes to determine type of error in front end
+# 11 -  Url input missing
+# 12 - Url Syntax error
+def input_validation(func):
+    def inner(request):
+        url = request.GET.get('url') or request.POST.get('url')
+        if not url:
+            return JsonResponse({"error": True, "value": 11, "msg": "No url sent"})
+
+        # verifying syntax of url
+        try:
+            url_field = URLField()
+            url = url_field.clean(url)
+            url = re.match(URL_PATH_REGEX, url).group(2)  # extracting the domain and directory name
+        except ValidationError as e:
+            print(e)
+            return JsonResponse({"error": True, "value": 12, "msg": "Invalid syntax"})
+
+        return func(request, url)
+
+    return inner
 
 
 def encode_to_base_62(url):

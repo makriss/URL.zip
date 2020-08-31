@@ -1,15 +1,16 @@
-from django.http import HttpResponse, Http404
+import re
+
+from django.http import HttpResponse, Http404, JsonResponse
 from django.shortcuts import get_object_or_404
 
 # Create your views here.
+from zipper.constants import URL_SYNTAX_REGEX
 from zipper.models import UrlMapper
-from zipper.utility_functions import encode_to_base_62
+import zipper.utility_functions as uf
 
 
-def minify_url(request):
-    url = request.GET['url']
-    # validate url syntax
-
+@uf.input_validation
+def minify_url(request, url):
     # url is first checked will in db. If present, retireve the existing hashcode.
     # If not, then generate a new hashcode
     try:
@@ -23,11 +24,8 @@ def minify_url(request):
         # url does not exist in db
         print("Hashcode exists for given url:", e)
         # Generating a hash code for the url
-        hashed_url = encode_to_base_62(url)
+        hashed_url = uf.encode_to_base_62(url)
         # hashcode, along with original url, is saved to db
         mapper_instance = UrlMapper.save_hashcode(hashed_url, url)
 
     return HttpResponse(mapper_instance.hashcode)
-
-
-
