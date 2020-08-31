@@ -1,4 +1,5 @@
 import hashlib
+import json
 import re
 
 from django.core.exceptions import ValidationError
@@ -6,16 +7,18 @@ from django.core.validators import URLValidator
 from django.forms import URLField
 from django.http import JsonResponse
 
-from zipper.constants import BASE62_DIGITS, URL_SYNTAX_REGEX, URL_PATH_REGEX
+from zipper.constants import BASE62_DIGITS, URL_SYNTAX_REGEX, URL_PATH_REGEX, DOMAIN_URL
+
 
 # Creating custom error codes to determine type of error in front end
 # 11 -  Url input missing
 # 12 - Url Syntax error
+# 20 - Success
 def input_validation(func):
     def inner(request):
-        url = request.GET.get('url') or request.POST.get('url')
+        url = request.GET.get('url') or request.POST.get('url') or json.loads(request.body).get('url')
         if not url:
-            return JsonResponse({"error": True, "value": 11, "msg": "No url sent"})
+            return JsonResponse({"error": True, "status_code": 11, "value": 'blank', "msg": "No url sent"})
 
         # verifying syntax of url
         try:
@@ -24,7 +27,7 @@ def input_validation(func):
             url = re.match(URL_PATH_REGEX, url).group(2)  # extracting the domain and directory name
         except ValidationError as e:
             print(e)
-            return JsonResponse({"error": True, "value": 12, "msg": "Invalid syntax"})
+            return JsonResponse({"error": True, "status_code": 12, "value": 'invalid', "msg": "Invalid syntax"})
 
         return func(request, url)
 
@@ -57,3 +60,10 @@ def inbuilt_encoder(url):
     h = hashlib.blake2b(digest_size=5)
     h.update(url.encode())
     return h.hexdigest()
+
+
+def parseUrl(instance):
+    return_object = {"status_code": 20}
+    return_object.update({"url": instance.url})
+    return_object.update({"minified_url":  "{}/{}".format( DOMAIN_URL, instance.hashcode)})
+    return JsonResponse(return_object)

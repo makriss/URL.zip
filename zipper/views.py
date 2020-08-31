@@ -28,4 +28,4 @@ def minify_url(request, url):
         # hashcode, along with original url, is saved to db
         mapper_instance = UrlMapper.save_hashcode(hashed_url, url)
 
-    return HttpResponse(mapper_instance.hashcode)
+    return uf.parseUrl(mapper_instance)

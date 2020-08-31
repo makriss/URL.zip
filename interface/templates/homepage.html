@@ -1,0 +1,49 @@
+{% extends 'index.html' %}
+{% load static %}
+{% get_static_prefix as STATIC_PREFIX %}
+{% block content %}
+    <section>
+        <h1 class="t_a">Free URL Shortener</h1>
+        <p class="t_a">
+            Url.zip is a free tool to shorten URLs. <br>
+            Create short & memorable links in seconds.
+        </p>
+        <br>
+        <div class="container">
+            <div class="row m_b" id="url-input-group">
+                <div class="offset-md-2 col-md-6">
+                    <div class="input-group input-group-lg">
+                      <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg"
+                             placeholder="Enter link here" ng-model="url_string">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-primary btn-lg w_100" ng-click="minifyUrl(url_string)">Zip it!</button>
+                </div>
+            </div>
+
+            <!-- Error alert -->
+            <div class="row m_b">
+                <div class="offset-md-2 col-md-5">
+                    <red-alert msg="errorMessage"></red-alert>
+                </div>
+            </div>
+
+            <div class="row m_b">
+                <div class="offset-md-2 col-md-9" id="minified-urls-div" ng-if="minifiedUrlsList.length">
+                    <ul>
+                        <li ng-repeat="url in minifiedUrlsList | orderBy:$index">
+                            <span ng-bind="url.url"></span>
+                            <div class="i_b">
+                                <span ng-bind="url.minified_url"></span> &nbsp;
+                                <button class="button button-secondary" ng-class="{'copied': url.copied}" ng-click="copyUrl(url)" ng-bind="url.btnText || 'Copy'"></button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+{% endblock %}

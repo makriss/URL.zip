@@ -1,0 +1,63 @@
+
+section {
+    padding: 2em 2em 6em;
+    background-color: #52b788;
+    color: white;
+}
+.w_100{width: 100%}
+.m_b{ margin-bottom: 1.4em;}
+.i_b {display: inline-block; }
+.t_a{     text-align: center; }
+#minified-urls-div {
+    background-color: white;
+    color: black;
+    border-radius: 8px;
+}
+#url-input-group>div:first-child{
+    padding-left: 0;
+}
+#url-input-group>div:last-child{
+    padding-right: 0;
+}
+#minified-urls-div>ul{
+    list-style-type:none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+#minified-urls-div>ul>li{
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#minified-urls-div>ul>li:not(:first-child){
+    border-top: 1px solid grey;
+}
+.button {
+    display: inline-block;
+    vertical-align: middle;
+    padding: .85em 1em;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    transition: background-color .25s ease-out,color .25s ease-out;
+    font-family: inherit;
+    font-size: .9rem;
+    line-height: 1;
+    text-align: center;
+    cursor: pointer;
+    background-color: #1779ba;
+    color: #fefefe;
+}
+.button-secondary{
+    background: #edf2fe;
+    color: #2a5bd7;
+}
+.button-secondary:hover{
+    background: #cedafa;
+    color: #2a5bd7;
+}
+.copied{
+    background-color: #52b788 !important;
+    color: white !important;
+}
+
