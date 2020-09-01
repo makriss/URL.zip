@@ -58,8 +58,9 @@ def inbuilt_encoder(url):
 
 
 def parseUrl(instance):
-    return_object = {"status_code": 20}
+    return_object = {}
     url_field = URLField()
     return_object.update({"url": url_field.clean(instance.url)})
-    return_object.update({"minified_url":  "{}/{}".format( DOMAIN_URL, instance.hashcode)})
-    return JsonResponse(return_object)
+    if instance.hashcode:
+        return_object.update({"minified_url": "{}/{}".format(DOMAIN_URL, instance.hashcode)})
+    return return_object

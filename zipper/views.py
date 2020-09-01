@@ -1,12 +1,12 @@
 import re
 
-from django.http import HttpResponse, Http404, JsonResponse
+from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404
 
-# Create your views here.
-from zipper.constants import URL_SYNTAX_REGEX
-from zipper.models import UrlMapper
 import zipper.utility_functions as uf
+# Create your views here.
+from zipper.constants import MINIFIED_URL_REGEX
+from zipper.models import UrlMapper
 
 
 @uf.input_validation
@@ -28,10 +28,36 @@ def minify_url(request, url):
         # hashcode, along with original url, is saved to db
         mapper_instance = UrlMapper.save_hashcode(hashed_url, url)
 
-    return uf.parseUrl(mapper_instance)
+    return JsonResponse(uf.parseUrl(mapper_instance))
 
 
 @uf.input_validation
 def get_shortening_count(request, url):
-    instance = UrlMapper.objects.get(url=url)
-    return JsonResponse({'url': url, 'count': instance.url_shorten_count, 'minified_url': instance.hashcode})
+    match = re.search(MINIFIED_URL_REGEX, url)
+    if match:
+        return JsonResponse({"error": True, "value": 'invalid', "msg": "Please enter a valid url"})
+
+    try:
+        instance = UrlMapper.objects.get(url=url)
+    except UrlMapper.DoesNotExist:
+        return JsonResponse({"error": True, "value": 'invalid', "msg": "Url has not been minified yet"})
+
+    return_object = uf.parseUrl(instance)
+    return_object.update({'count': instance.url_shorten_count})
+    return JsonResponse(return_object)
+
+
+@uf.input_validation
+def get_total_clicks(request, minified_url):
+    match = re.search(MINIFIED_URL_REGEX, minified_url)
+    if not match:
+        return JsonResponse({"error": True, "value": 'invalid', "msg": "Please enter a valid minified url"})
+
+    try:
+        instance = UrlMapper.objects.get(hashcode=match.group(1))
+    except UrlMapper.DoesNotExist:
+        return JsonResponse({"error": True, "value": 'invalid', "msg": "Url does not exist"})
+
+    return_object = uf.parseUrl(instance)
+    return_object.update({'clicks': instance.clicks})
+    return JsonResponse(return_object)

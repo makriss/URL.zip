@@ -2,7 +2,38 @@
 {% load static %}
 {% get_static_prefix as STATIC_PREFIX %}
 {% block content %}
-    <section>
+<div id="homepage">
+<!--    <div class="container">-->
+<!--        <nav class="navbar navbar-expand-lg navbar-light bg-light">-->
+<!--          <a class="navbar-brand" href="#">UrlZipper</a>-->
+<!--&lt;!&ndash;          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">&ndash;&gt;-->
+<!--&lt;!&ndash;            <span class="navbar-toggler-icon"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;          </button>&ndash;&gt;-->
+<!--          <div class="collapse navbar-collapse" id="navbarNav">-->
+<!--            <ul class="navbar-nav" role="tablist">-->
+<!--              <li class="nav-item active">-->
+<!--                <a class="nav-link active" id="minify_tab-tab" data-toggle="tab" href="#minify_tab" role="tab" aria-controls="dweet" aria-selected="true">Home <span class="sr-only">(current)</span></a>-->
+<!--              </li>-->
+<!--              <li class="nav-item">-->
+<!--                <a class="nav-link" id="analytics-tab"  data-toggle="tab" href="#analytics" role="tab" aria-controls="dweet" aria-selected="false">Analytics</a>-->
+<!--              </li>-->
+<!--            </ul>-->
+<!--          </div>-->
+<!--        </nav>-->
+
+<!--    </div>-->
+    <ul class="nav nav-pills">
+      <li class="nav-item">
+        <a class="nav-link active" id="zipper-tab" data-toggle="tab" href="#zipper" role="tab" aria-controls="zipper" aria-selected="true">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="analytics-tab" data-toggle="tab" href="#analytics" role="tab" aria-controls="analytics" aria-selected="false">Analytics</a>
+      </li>
+    </ul>
+
+    <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="zipper" role="tabpanel" aria-labelledby="zipper-tab">
+            <section>
         <h1 class="t_a">Free URL Shortener</h1>
         <p class="t_a">
             [[brand_name]] is a free tool to shorten URLs. <br>
@@ -47,5 +78,64 @@
 
         </div>
     </section>
+          </div>
 
+        <!-- analytics tab -->
+          <div class="tab-pane fade" id="analytics" role="tabpanel" aria-labelledby="analytics-tab">
+
+              <section>
+                  <h2 class="t_a">Analytics Tab</h2>
+                  <p class="t_a">
+                      Your place to analyse the data associated with the urls you minify.
+                  </p>
+                  <div class="container">
+                      <div class="row m_b" id="analytics-input-group">
+                        <div class="offset-md-2 col-md-5">
+                            <div class="input-group input-group-lg">
+                              <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg"
+                                     placeholder="Enter link here" ng-model="url_analytics">
+                            </div>
+                        </div>
+                          <div class="col-md-3" ng-init="analytics_mode = 'minified_count'">
+                            <input type="radio" id="minified-count" name="contact" value="minified_count" ng-model="analytics_mode" checked>
+                            <label for="minified-count">Minified Count</label>
+                            <input type="radio" id="clicks-count" name="contact" value="clicks_count" ng-model="analytics_mode">
+                            <label for="clicks-count">Clicks Count</label>
+                          </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-success btn-lg w_100" ng-click="getAnalysis(url_analytics, analytics_mode)">Analyse</button>
+                        </div>
+                    </div>
+
+                      <div class="row m_b">
+                        <div class="offset-md-2 col-md-5">
+                            <red-alert msg="errorMessage"></red-alert>
+                        </div>
+                    </div>
+
+                  </div>
+              </section>
+                <br>
+              <div id="analytics-result-card" class="card text-white bg-info mb-3" style="max-width: 18rem;" ng-if="analytics.data">
+                  <div class="card-header t_a" ng-bind="analytics.mode"></div>
+                  <div class="card-body">
+                        <h5 class="card-title" ng-bind="trimVerboseUrl.call(analytics.data)"></h5>
+                        <p class="card-text t_a" ng-bind="analytics.data.count || analytics.data.clicks"></p>
+                      <div>
+                        <span>
+                            <a ng-href="[[analytics.data.minified_url]]" target="_blank" ng-bind="analytics.data.minified_url" title="Shotened url for [[analytics.data.url]]"></a>
+                        </span> &nbsp;
+<!--                          <button class="button button-secondary" ng-class="{'copied': analytics.data.copied}" ng-click="copyUrl(analytics.data)" ng-bind="analytics.data.btnText || 'Copy'"></button>-->
+
+                      </div>
+                  </div>
+                </div>
+
+
+
+          </div> <!-- analytics tab ends -->
+
+    </div>
+
+</div>
 {% endblock %}

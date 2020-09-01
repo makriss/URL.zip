@@ -6,5 +6,6 @@ from zipper import views
 
 urlpatterns = [
     path('', views.minify_url),
-    path('count/', views.get_shortening_count)
+    path('count/', views.get_shortening_count),
+    path('clicks/', views.get_total_clicks)
 ]

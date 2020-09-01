@@ -5,6 +5,9 @@ app.controller('zipperCtrl', ['$scope', '$http', '$timeout', function(scope, $ht
     const URL_VERBOSE_LIMIT = 20,
             COPIED_DISPLAY_TIME = 1500;
     scope.brand_name = "Url.zip";
+    const MINIFIED_COUNT_API = "/zip/count/",
+            CLICKS_COUNT = "/zip/clicks/";
+    scope.analytics = {};
 
 // Called when user clicks on 'zip it' button
     scope.minifyUrl = function(url){
@@ -69,6 +72,39 @@ app.controller('zipperCtrl', ['$scope', '$http', '$timeout', function(scope, $ht
             return this.url;
         else
             return this.url.substring(0, URL_VERBOSE_LIMIT) +  "...";
+    }
+
+    scope.getAnalysis = function(url, mode){
+        if (!url || !mode){
+            showErrorMessage('blank');
+            return;
+        }
+        let analytics_api = "";
+        switch(mode){
+            case 'minified_count': analytics_api = MINIFIED_COUNT_API;
+                                            scope.analytics.mode = "URL Minified Count";
+                                            break;
+            case 'clicks_count': analytics_api = CLICKS_COUNT;
+                                            scope.analytics.mode = "URL Clicked Count";
+                                            break;
+        }
+        getAnalyticsData(analytics_api, url);
+    }
+
+    function getAnalyticsData(api, url){
+        $http.post(api, {'url': url})
+            .then(function(result){
+                if (result.data.error){
+                    showErrorMessage(result.data.value, result.data.msg)
+                    scope.analytics.data = null;
+                }
+                else{
+                    scope.analytics.data = result.data;
+                    scope.url_analytics = "";
+                }
+            }, function(result){
+                console.error(result);
+            })
     }
 
 }])
