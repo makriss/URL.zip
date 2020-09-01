@@ -4,6 +4,7 @@ app.controller('zipperCtrl', ['$scope', '$http', '$timeout', function(scope, $ht
     scope.minifiedUrlsList = [];
     const URL_VERBOSE_LIMIT = 20,
             COPIED_DISPLAY_TIME = 1500;
+    scope.brand_name = "Url.zip";
 
 // Called when user clicks on 'zip it' button
     scope.minifyUrl = function(url){

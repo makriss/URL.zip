@@ -29,3 +29,9 @@ def minify_url(request, url):
         mapper_instance = UrlMapper.save_hashcode(hashed_url, url)
 
     return uf.parseUrl(mapper_instance)
+
+
+@uf.input_validation
+def get_shortening_count(request, url):
+    instance = UrlMapper.objects.get(url=url)
+    return JsonResponse({'url': url, 'count': instance.url_shorten_count, 'minified_url': instance.hashcode})
