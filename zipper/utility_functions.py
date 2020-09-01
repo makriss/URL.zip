@@ -3,17 +3,12 @@ import json
 import re
 
 from django.core.exceptions import ValidationError
-from django.core.validators import URLValidator
 from django.forms import URLField
 from django.http import JsonResponse
 
-from zipper.constants import BASE62_DIGITS, URL_SYNTAX_REGEX, URL_PATH_REGEX, DOMAIN_URL
+from zipper.constants import BASE62_DIGITS, URL_PATH_REGEX, DOMAIN_URL
 
 
-# Creating custom error codes to determine type of error in front end
-# 11 -  Url input missing
-# 12 - Url Syntax error
-# 20 - Success
 def input_validation(func):
     def inner(request):
         url = request.GET.get('url') or request.POST.get('url') or json.loads(request.body).get('url')
@@ -64,6 +59,7 @@ def inbuilt_encoder(url):
 
 def parseUrl(instance):
     return_object = {"status_code": 20}
-    return_object.update({"url": instance.url})
+    url_field = URLField()
+    return_object.update({"url": url_field.clean(instance.url)})
     return_object.update({"minified_url":  "{}/{}".format( DOMAIN_URL, instance.hashcode)})
     return JsonResponse(return_object)

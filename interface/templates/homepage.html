@@ -33,9 +33,11 @@
                 <div class="offset-md-2 col-md-9" id="minified-urls-div" ng-if="minifiedUrlsList.length">
                     <ul>
                         <li ng-repeat="url in minifiedUrlsList | orderBy:$index">
-                            <span ng-bind="url.url"></span>
+                            <span ng-bind="trimVerboseUrl.call(url)"></span>
                             <div class="i_b">
-                                <span ng-bind="url.minified_url"></span> &nbsp;
+                                <span>
+                                    <a ng-href="[[url.minified_url]]" target="_blank" ng-bind="url.minified_url" title="Shotened url for [[url.url]]"></a>
+                                </span> &nbsp;
                                 <button class="button button-secondary" ng-class="{'copied': url.copied}" ng-click="copyUrl(url)" ng-bind="url.btnText || 'Copy'"></button>
                             </div>
                         </li>
