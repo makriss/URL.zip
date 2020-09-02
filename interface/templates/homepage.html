@@ -3,25 +3,6 @@
 {% get_static_prefix as STATIC_PREFIX %}
 {% block content %}
 <div id="homepage">
-<!--    <div class="container">-->
-<!--        <nav class="navbar navbar-expand-lg navbar-light bg-light">-->
-<!--          <a class="navbar-brand" href="#">UrlZipper</a>-->
-<!--&lt;!&ndash;          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">&ndash;&gt;-->
-<!--&lt;!&ndash;            <span class="navbar-toggler-icon"></span>&ndash;&gt;-->
-<!--&lt;!&ndash;          </button>&ndash;&gt;-->
-<!--          <div class="collapse navbar-collapse" id="navbarNav">-->
-<!--            <ul class="navbar-nav" role="tablist">-->
-<!--              <li class="nav-item active">-->
-<!--                <a class="nav-link active" id="minify_tab-tab" data-toggle="tab" href="#minify_tab" role="tab" aria-controls="dweet" aria-selected="true">Home <span class="sr-only">(current)</span></a>-->
-<!--              </li>-->
-<!--              <li class="nav-item">-->
-<!--                <a class="nav-link" id="analytics-tab"  data-toggle="tab" href="#analytics" role="tab" aria-controls="dweet" aria-selected="false">Analytics</a>-->
-<!--              </li>-->
-<!--            </ul>-->
-<!--          </div>-->
-<!--        </nav>-->
-
-<!--    </div>-->
     <ul class="nav nav-pills">
       <li class="nav-item">
         <a class="nav-link active" id="zipper-tab" data-toggle="tab" href="#zipper" role="tab" aria-controls="zipper" aria-selected="true">Home</a>
@@ -32,8 +13,10 @@
     </ul>
 
     <div class="tab-content" id="myTabContent">
-          <div class="tab-pane fade show active" id="zipper" role="tabpanel" aria-labelledby="zipper-tab">
-            <section>
+
+    <!-- homepage view -->
+      <div class="tab-pane fade show active" id="zipper" role="tabpanel" aria-labelledby="zipper-tab">
+        <section class="b_c">
         <h1 class="t_a">Free URL Shortener</h1>
         <p class="t_a">
             [[brand_name]] is a free tool to shorten URLs. <br>
@@ -41,6 +24,7 @@
         </p>
         <br>
         <div class="container">
+
             <div class="row m_b" id="url-input-group">
                 <div class="offset-md-2 col-md-6">
                     <div class="input-group input-group-lg">
@@ -49,13 +33,13 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <button class="btn btn-success btn-lg w_100" ng-click="minifyUrl(url_string)">Zip it!</button>
+                    <button class="btn btn-pm btn-lg w_100" ng-click="minifyUrl(url_string)">Zip it!</button>
                 </div>
             </div>
 
             <!-- Error alert -->
             <div class="row m_b">
-                <div class="offset-md-2 col-md-5">
+                <div class="offset-md-2 col-md-9">
                     <red-alert msg="errorMessage"></red-alert>
                 </div>
             </div>
@@ -63,7 +47,7 @@
             <div class="row m_b">
                 <div class="offset-md-2 col-md-9" id="minified-urls-div" ng-if="minifiedUrlsList.length">
                     <ul>
-                        <li ng-repeat="url in minifiedUrlsList | orderBy:$index">
+                        <li ng-repeat="url in minifiedUrlsList | orderBy:-$index">
                             <span ng-bind="trimVerboseUrl.call(url)"></span>
                             <div class="i_b">
                                 <span>
@@ -79,11 +63,12 @@
         </div>
     </section>
           </div>
+        <!-- homepage view ends -->
 
         <!-- analytics tab -->
           <div class="tab-pane fade" id="analytics" role="tabpanel" aria-labelledby="analytics-tab">
 
-              <section>
+              <section class="b_c">
                   <h2 class="t_a">Analytics Tab</h2>
                   <p class="t_a">
                       Your place to analyse the data associated with the urls you minify.
@@ -93,7 +78,7 @@
                         <div class="offset-md-2 col-md-5">
                             <div class="input-group input-group-lg">
                               <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg"
-                                     placeholder="Enter link here" ng-model="url_analytics">
+                                     placeholder="[[analytics_placeholder]]" ng-model="url_analytics">
                             </div>
                         </div>
                           <div class="col-md-3" ng-init="analytics_mode = 'minified_count'">
@@ -103,7 +88,7 @@
                             <label for="clicks-count">Clicks Count</label>
                           </div>
                         <div class="col-md-2">
-                            <button class="btn btn-success btn-lg w_100" ng-click="getAnalysis(url_analytics, analytics_mode)">Analyse</button>
+                            <button class="btn btn-pm btn-lg w_100" ng-click="getAnalysis(url_analytics, analytics_mode)">Analyse</button>
                         </div>
                     </div>
 
@@ -116,7 +101,7 @@
                   </div>
               </section>
                 <br>
-              <div id="analytics-result-card" class="card text-white bg-info mb-3" style="max-width: 18rem;" ng-if="analytics.data">
+              <div id="analytics-result-card" class="card text-white b_c mb-3" style="max-width: 18rem;" ng-if="analytics.data">
                   <div class="card-header t_a" ng-bind="analytics.mode"></div>
                   <div class="card-body">
                         <h5 class="card-title" ng-bind="trimVerboseUrl.call(analytics.data)"></h5>

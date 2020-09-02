@@ -4,7 +4,6 @@ from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404
 
 import zipper.utility_functions as uf
-# Create your views here.
 from zipper.constants import MINIFIED_URL_REGEX
 from zipper.models import UrlMapper
 
@@ -33,13 +32,16 @@ def minify_url(request, url):
 
 @uf.input_validation
 def get_shortening_count(request, url):
+    """
+    Api to count the number of times a url has been shortened
+    """
     match = re.search(MINIFIED_URL_REGEX, url)
-    if match:
+    if match:  # if a minified url is sent, return
         return JsonResponse({"error": True, "value": 'invalid', "msg": "Please enter a valid url"})
 
     try:
         instance = UrlMapper.objects.get(url=url)
-    except UrlMapper.DoesNotExist:
+    except UrlMapper.DoesNotExist: # if url does not exist, meaning not been shortened yet, return error
         return JsonResponse({"error": True, "value": 'invalid', "msg": "Url has not been minified yet"})
 
     return_object = uf.parseUrl(instance)
@@ -49,13 +51,16 @@ def get_shortening_count(request, url):
 
 @uf.input_validation
 def get_total_clicks(request, minified_url):
+    """
+    Api to count the number of times minified url has been resolved / used
+    """
     match = re.search(MINIFIED_URL_REGEX, minified_url)
-    if not match:
+    if not match: # if a non-minified url is sent, return an error msg
         return JsonResponse({"error": True, "value": 'invalid', "msg": "Please enter a valid minified url"})
 
     try:
         instance = UrlMapper.objects.get(hashcode=match.group(1))
-    except UrlMapper.DoesNotExist:
+    except UrlMapper.DoesNotExist: # if minified url does not exist, return an error msg
         return JsonResponse({"error": True, "value": 'invalid', "msg": "Url does not exist"})
 
     return_object = uf.parseUrl(instance)

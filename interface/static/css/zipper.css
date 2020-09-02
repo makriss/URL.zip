@@ -1,9 +1,9 @@
 
 section {
     padding: 2em 2em 6em;
-    background-color: #52b788;
     color: white;
 }
+.b_c {    background-color: #43aa8b;}
 .w_100{width: 100%}
 .m_b{ margin-bottom: 1.4em;}
 .i_b {display: inline-block; }
@@ -13,10 +13,10 @@ section {
     color: black;
     border-radius: 8px;
 }
-#url-input-group>div:first-child{
+#url-input-group>div:first-child, #url-input-group+div.row>div:first-child{
     padding-left: 0;
 }
-#url-input-group>div:last-child{
+#url-input-group>div:last-child, #url-input-group+div.row>div:first-child{
     padding-right: 0;
 }
 #minified-urls-div>ul{
@@ -68,3 +68,9 @@ div#homepage>ul.nav{
 #analytics-input-group{align-items: baseline;}
 div#analytics-result-card p.card-text{ font-size: 3em; }
 div#analytics-result-card {margin: auto;}
+#homepage .nav-link.active { background-color: #577590; }
+#homepage .nav-link { color: white; }
+.btn-pm {
+    background-color: #02c39a;
+    color: white;
+}

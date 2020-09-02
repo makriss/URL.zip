@@ -14,7 +14,7 @@ app.directive('redAlert', function($timeout){
         scope: {
             msg: '='
         },
-        template: '<div class="alert alert-danger" role="alert" ng-hide="!msg.length" ng-bind="msg"></div>',
+        template: '<div class="alert alert-danger t_a" role="alert" ng-hide="!msg.length" ng-bind="msg"></div>',
         link: function(scope, elm, attr){
             window.ds = scope;
             scope.$watch('msg', function(newVal, oldVal){

@@ -25,4 +25,4 @@ def resolve_and_redirect(request, hashed_url):
     except Http404:
         return HttpResponse("<h2>Url does not exist</h2>")
 
-    return HttpResponseRedirect("{}{}".format(PROTOCOL_SECURE, instance.url)) # prefixing https
+    return HttpResponseRedirect("{}{}".format(PROTOCOL_SECURE, instance.url))  # prefixing https

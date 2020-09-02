@@ -74,13 +74,14 @@ app.controller('zipperCtrl', ['$scope', '$http', '$timeout', function(scope, $ht
             return this.url.substring(0, URL_VERBOSE_LIMIT) +  "...";
     }
 
+// Called after clicking Analyse button in Analysis tab
     scope.getAnalysis = function(url, mode){
-        if (!url || !mode){
+        if (!url || !mode){ // If input is empty, show error message and return
             showErrorMessage('blank');
             return;
         }
         let analytics_api = "";
-        switch(mode){
+        switch(mode){   // api to be called is selected based on the mode (radio button)
             case 'minified_count': analytics_api = MINIFIED_COUNT_API;
                                             scope.analytics.mode = "URL Minified Count";
                                             break;
@@ -91,12 +92,16 @@ app.controller('zipperCtrl', ['$scope', '$http', '$timeout', function(scope, $ht
         getAnalyticsData(analytics_api, url);
     }
 
+// Calls analytics api
     function getAnalyticsData(api, url){
+        if (!api || !url)
+            return;
+
         $http.post(api, {'url': url})
             .then(function(result){
                 if (result.data.error){
                     showErrorMessage(result.data.value, result.data.msg)
-                    scope.analytics.data = null;
+                    scope.analytics.data = null;    // Card will be hidden
                 }
                 else{
                     scope.analytics.data = result.data;
@@ -106,5 +111,15 @@ app.controller('zipperCtrl', ['$scope', '$http', '$timeout', function(scope, $ht
                 console.error(result);
             })
     }
+
+// Monitoring value change for 'analytics_mode' model. Based on its current value,
+// placeholder in analytics input is changed.
+    scope.$watch('analytics_mode', (newVal) => {
+        if (newVal === "minified_count")
+            scope.analytics_placeholder = "Enter actual url";
+        else
+            scope.analytics_placeholder = "Enter minified url";
+
+    })
 
 }])
